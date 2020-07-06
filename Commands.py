@@ -17,7 +17,7 @@ def processCommand(cmd):
         s1 = Ships.Ship(name, crew)
         return s1
     elif cmd == "combat":
-        
+        print("This function still needs to be added\n")
     elif cmd == "help":
         print("To create a ship, type 'new ship'\n")
         return 1
