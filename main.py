@@ -1,4 +1,5 @@
 import pygame
+from menus import Menu
 
 #Init pygame
 pygame.init()
@@ -13,17 +14,19 @@ pygame.display.set_icon(icon)
 
 #Ship
 shipImg = pygame.image.load('Images/Ship.png')
-shipX = 370
+shipX = 200
 shipY = 480
 
 #Text Block
-font = pygame.font.Font('freesansbold.ttf', 16)
-textX = 10
+font = pygame.font.Font('freesansbold.ttf', 14)
+textX = 500
 textY = 10
 
-def show_text_block(x, y, text):
-    textBlock = font.render(text, True, (255, 255, 255))
-    screen.blit(textBlock, (x, y))
+#Print each line of text to the screen
+def show_text_block(x, y, lineList):
+    for idx, line in enumerate(lineList):
+        textLine = font.render(line, True, (255, 255, 255))
+        screen.blit(textLine, (x, (y+(idx*16))))
 
 def ship():
     screen.blit(shipImg, (shipX, shipY))
@@ -38,8 +41,10 @@ while running:
     #Set screen background to black
     screen.fill((0, 0, 0))
 
+    #Render the ship
     ship()
-    show_text_block(textX,textY,"Test Text")
+    #Show the Main Menu
+    show_text_block(textX,textY, Menu.MAIN)
 
     #Draw frame
     pygame.display.update()
