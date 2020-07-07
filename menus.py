@@ -3,24 +3,30 @@
 class Menu:
     #Main menu
     MAIN = [
-        "New ship",
-        "Combat",
-        "Help",
+        "Main Menu:",
+        "N => New ship",
+        "C => Combat",
+        "S => Select ship",
         "",
         "",
-        "Exit"
+        "E => Exit"
     ]
     #Naval combat menu
     COMBAT = [
-        "Here are your options:",
-        "ahead => Full speed ahead!",
-        "half => Half sail!",
-        "hold => Hold position!",
-        "port => Turn to port!",
-        "star => Turn to starboard!",
-        "jibe => Prepare to jibe!",
-        "fire => Cannons ready!",
-        "report => Report to...",
-        "brace => Brace for impact!",
-        "surrender => We surrender!"
+        "Combat Menu:",
+        "\u2191 => Full speed ahead!",
+        "\u2193 => Half sail!",
+        "H => Hold position!",
+        "P => Turn to port!",
+        "S => Turn to starboard!",
+        "J => Prepare to jibe!",
+        "F => Cannons ready!",
+        "R => Report to...",
+        "B => Brace for impact!",
+        "X => We surrender!"
+    ]
+
+    #Ship select menu
+    SHIPS = [
+        "Select a ship number:"
     ]
