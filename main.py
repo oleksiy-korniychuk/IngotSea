@@ -136,6 +136,7 @@ def naval_combat_round(first, second):
                     else:
                         await_input = True
                         turnNum -= 1
+        #TODO: Second player 
 
         # Set screen background to black
         screen.fill((0, 0, 0))
