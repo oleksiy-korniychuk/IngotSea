@@ -10,6 +10,92 @@ import Commands
 import random
 
 
+def navalCombatLoop(Ship1, Ship2):
+    global wait
+    inCombat = True
+    roundNum = 1
+    while inCombat:
+        if not wait:
+            combatLog.append("ROUND " + str(roundNum) + "!")
+            # Determine round initiative
+            firstToGo = random.randrange(1,3)
+            if firstToGo == 1:
+                firstShip = Ship1
+                secondShip = Ship2
+            else:
+                firstShip = Ship2
+                secondShip = Ship1
+            combatLog.append(firstShip.name + " will go first this turn.")
+            turnNum = 1
+        while turnNum <= 3:
+            if not wait:
+                print(str(combatLog))
+                render_combat_log(0, 10, combatLog)
+                # First Ship
+                combatLog.append("What would " + firstShip.name + " like to do?")
+                wait = True
+            for event in pygame.event.get():
+                # Window is closed using the X in the top right
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                # Key is pressed
+                elif event.type == pygame.KEYUP:
+                    turnNum += 1
+                    wait = False
+                    if event.key == pygame.K_UP:
+                        combatLog.append("Full speed ahead!")
+                        firstShip.speedUp()
+                        firstShip.move()
+                    elif event.key == pygame.K_DOWN:
+                        combatLog.append("Half sail!")
+                        firstShip.slowDown()
+                        firstShip.move()
+                    elif event.key == pygame.K_h:
+                        combatLog.append("Hold position!")
+                    elif event.key == pygame.K_p:
+                        combatLog.append("Turn to port!")
+                        firstShip.turn("port")
+                    elif event.key == pygame.K_s:
+                        combatLog.append("Turn to starboard!")
+                        firstShip.turn("star")
+                    elif event.key == pygame.K_j:
+                        combatLog.append("Prepare to jibe!")
+                        firstShip.turn("jibe")
+                    elif event.key == pygame.K_f:
+                        combatLog.append("Cannons ready!\n")
+                        distance = 0
+                        if firstShip.facing == 0 or firstShip.facing == 2:
+                            distance = abs(firstShip.location[1] - secondShip.location[1])
+                        else:
+                            distance = abs(firstShip.location[0] - secondShip.location[0])
+                        damage = -1
+                        while damage == -1:
+                            #side = input("Which side cannons do you want to fire?")
+                            damage = firstShip.fire(distance, "star", secondShip)
+                            combatLog.append(firstShip.name + " dealt " + str(damage) + " damage to " + secondShip.name + "!")
+                        secondShip.hullHealth -= damage
+            # Second Ship
+            combatLog.append("What would " + secondShip.name + " like to do?")
+            # Check if one of the ships has sunk
+            if not firstShip.isAfloat():
+                combatLog.append(firstShip.name + " has disappeared beneath the waves.")
+                inCombat = False
+            elif not secondShip.isAfloat():
+                combatLog.append(secondShip.name + " has disappeared beneath the waves.\n")
+                inCombat = False
+                # Set screen background to black
+                screen.fill((0, 0, 0))
+
+                # Render the ship
+                if shipSelected:
+                    render_ship()
+                # Render the combat menu
+                navalCombatLoop(shipSelected, enemyShipSelected)
+                # Draw frame
+                pygame.display.update()
+        roundNum += 1
+
+
 def processNavalCombatAction(action, attackShip, defenseShip):
     if action == "help":
         print("Here are your options:\n")
