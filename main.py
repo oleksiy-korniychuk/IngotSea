@@ -83,9 +83,11 @@ def naval_combat_round(first, second):
     global shipImg
     turnNum = 1
     await_input = False
-    while turnNum <= 3:
+    currentShip = first
+    #Three turns per person
+    while turnNum <= 6:
         if not await_input:
-            combatLog.append("What would " + first.name + " like to do?")
+            combatLog.append("What would " + currentShip.name + " like to do?")
             await_input = True
         else:
             for combatEvent in pygame.event.get():
@@ -95,48 +97,53 @@ def naval_combat_round(first, second):
                     quit()
                 # Key is pressed
                 elif combatEvent.type == pygame.KEYUP:
-                    turnNum += 1
-                    await_input = False
+                    validInput = True
                     if combatEvent.key == pygame.K_UP:
                         combatLog.append("Full speed ahead!")
-                        first.speedUp()
-                        first.move()
+                        currentShip.speedUp()
+                        currentShip.move()
                     elif combatEvent.key == pygame.K_DOWN:
                         combatLog.append("Half sail!")
-                        first.slowDown()
-                        first.move()
+                        currentShip.slowDown()
+                        currentShip.move()
                     elif combatEvent.key == pygame.K_h:
                         combatLog.append("Hold position!")
                     elif combatEvent.key == pygame.K_p:
                         combatLog.append("Turn to port!")
-                        first.turn("port")
+                        currentShip.turn("port")
                         shipImg = pygame.transform.rotate(shipImg, 90)
                     elif combatEvent.key == pygame.K_s:
                         combatLog.append("Turn to starboard!")
-                        first.turn("star")
+                        currentShip.turn("star")
                         shipImg = pygame.transform.rotate(shipImg, -90)
                     elif combatEvent.key == pygame.K_j:
                         combatLog.append("Prepare to jibe!")
-                        first.turn("jibe")
+                        currentShip.turn("jibe")
                         shipImg = pygame.transform.rotate(shipImg, 180)
                     elif combatEvent.key == pygame.K_f:
-                        combatLog.append("Cannons ready!\n")
+                        combatLog.append("Cannons ready!")
                         distance = 0
-                        if first.facing == 0 or first.facing == 2:
-                            distance = abs(first.location[1] - second.location[1])
+                        if currentShip.facing == 0 or currentShip.facing == 2:
+                            distance = abs(currentShip.location[1] - second.location[1])
                         else:
-                            distance = abs(first.location[0] - second.location[0])
+                            distance = abs(currentShip.location[0] - second.location[0])
                         damage = -1
                         while damage == -1:
-                            #side = input("Which side cannons do you want to fire?")
-                            damage = first.fire(distance, "star", second)
-                            combatLog.append(first.name + " dealt " + str(damage) + " damage to " + second.name + "!")
+                            #TODO: side = input("Which side cannons do you want to fire?")
+                            damage = currentShip.fire(distance, "star", second)
+                            combatLog.append(currentShip.name + " dealt " + str(damage) + " damage to " + second.name + "!")
                         second.hullHealth -= damage
                     #Invalid entry
                     else:
-                        await_input = True
-                        turnNum -= 1
-        #TODO: Second player 
+                        validInput = False
+                    if validInput:
+                        turnNum += 1
+                        await_input = False
+                        #switch ships
+                        if currentShip == first:
+                            currentShip = second
+                        else:
+                            currentShip = first
 
         # Set screen background to black
         screen.fill((0, 0, 0))
